@@ -67,7 +67,7 @@ public class CharacterFromXML {
         return null;
 	}
 	
-	/**​‌​​​‌‌​​​‌‌​​​‌​​‌‌‌​​‌
+	/**
 	 * Create a joint
 	 * 
 	 * TODO: Objective 8: XML, Adapt commented code in createJoint() to create your joint nodes when loading from xml
@@ -80,21 +80,21 @@ public class CharacterFromXML {
 			FreeJoint joint = new FreeJoint( name );
 			return joint;
 		} else if ( type.equals("spherical") ) {
-			// position is optional (ignored if missing) but should probably be a required attribute!​‌​​​‌‌​​​‌‌​​​‌​​‌‌‌​​‌
+			// position is optional (ignored if missing) but should probably be a required attribute!
 			// Could add optional attributes for limits (to all joints)
 
-//			SphericalJoint joint = new SphericalJoint( name );
-//			if ( (t=getTuple3dAttr(dataNode,"position")) != null ) joint.setPosition( t );			
-//			return joint;
+			SphericalJoint joint = new SphericalJoint( name );
+			if ( (t=getTuple3dAttr(dataNode,"position")) != null ) joint.setPosition( t );			
+			return joint;
 			
 		} else if ( type.equals("rotary") ) {
 			// position and axis are required... passing null to set methods
 			// likely to cause an execption (perhaps OK)
 			
-//			Hinge joint = new Hinge( name );
-//			joint.setPosition( getTuple3dAttr(dataNode,"position") );
-//			joint.setAxis( getTuple3dAttr(dataNode,"axis") );
-//			return joint;
+			RotaryJoint joint = new RotaryJoint( name );
+			joint.setPosition( getTuple3dAttr(dataNode,"position") );
+			joint.setAxis( getTuple3dAttr(dataNode,"axis") ); //x is 0 for x-axis, 1 y-axis, 2 z-axis, y and z are min and max rotation values
+			return joint;
 			
 		} else {
 			System.err.println("Unknown type " + type );
@@ -112,17 +112,17 @@ public class CharacterFromXML {
 		String name = dataNode.getAttributes().getNamedItem("name").getNodeValue();
 		Tuple3d t;
 		if ( type.equals("box" ) ) {
-//			BodyBox geom = new BodyBox( name );
-//			if ( (t=getTuple3dAttr(dataNode,"center")) != null ) geom.setCentre( t );
-//			if ( (t=getTuple3dAttr(dataNode,"scale")) != null ) geom.setScale( t );
-//			if ( (t=getTuple3dAttr(dataNode,"color")) != null ) geom.setColor( t );
-//			return geom;
+			BodyBox geom = new BodyBox( name );
+			if ( (t=getTuple3dAttr(dataNode,"center")) != null ) geom.setCentre( t );
+			if ( (t=getTuple3dAttr(dataNode,"scale")) != null ) geom.setScale( t );
+			if ( (t=getTuple3dAttr(dataNode,"color")) != null ) geom.setColor( t );
+			return geom;
 		} else if ( type.equals( "sphere" )) {
-//			BodySphere geom = new BodySphere( name );				
-//			if ( (t=getTuple3dAttr(dataNode,"center")) != null ) geom.setCentre( t );
-//			if ( (t=getTuple3dAttr(dataNode,"scale")) != null ) geom.setScale( t );
-//			if ( (t=getTuple3dAttr(dataNode,"color")) != null ) geom.setColor( t );
-//			return geom;	
+			BodySphere geom = new BodySphere( name );				
+			if ( (t=getTuple3dAttr(dataNode,"center")) != null ) geom.setCentre( t );
+			if ( (t=getTuple3dAttr(dataNode,"scale")) != null ) geom.setScale( t );
+			if ( (t=getTuple3dAttr(dataNode,"color")) != null ) geom.setColor( t );
+			return geom;	
 		} else {
 			System.err.println("unknown type " + type );
 		}

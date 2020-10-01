@@ -1,6 +1,7 @@
 package comp557.a1;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Tuple3d;
 
 import com.jogamp.opengl.GLAutoDrawable;
 
@@ -20,6 +21,10 @@ public class RotaryJoint extends GraphNode {
 		dofs.add( rotation = new DoubleParameter( name+" r" + axis, 0, minRotation, maxRotation ) );	
 	}
 	
+	public RotaryJoint(String name) {
+		super(name);
+	}
+
 	@Override
 	public void display( GLAutoDrawable drawable, BasicPipeline pipeline ) {
 		pipeline.push();
@@ -28,13 +33,23 @@ public class RotaryJoint extends GraphNode {
 		pipeline.setModelingMatrixUniform(drawable.getGL().getGL4());
 		pipeline.translate(translationArray[0], translationArray[1], translationArray[2]);
 		switch(axis) {
-			case "x": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 1, 0, 0); break;
-			case "y": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 0, 1, 0); break;
-			case "z": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 0, 0, 1); break;
+			case "0": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 1, 0, 0); break;
+			case "1": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 0, 1, 0); break;
+			case "2": pipeline.rotate(Math.toRadians((double)rotation.getValue()), 0, 0, 1); break;
 		}
 		
 		super.display( drawable, pipeline );	
 		pipeline.pop();
+	}
+
+	public void setPosition(Tuple3d t) {
+		this.translationArray = new double[]{t.x, t.y, t.z};
+	}
+
+	public void setAxis(Tuple3d tuple3dAttr) {
+		this.axis = Integer.toString((int) tuple3dAttr.x);
+		dofs.add( rotation = new DoubleParameter( name+" r" + axis, 0,  tuple3dAttr.y,  tuple3dAttr.z ) );	
+		
 	}
 	
 }

@@ -106,12 +106,19 @@ public class BasicPipeline {
 		glUniformMatrix( gl, MinvTMatrixID, MinvTMatrix);
 	}
 	
+	private Matrix4d tmpMatrix4d1 = new Matrix4d();
+	private Matrix4d tmpMatrix4d2 = new Matrix4d();
+	
 	/** 
 	 * Pushes the modeling matrix and its inverse transpose onto the stack so 
 	 * that the state can be restored later
 	 */
 	public void push() {
 		// TODO: Objective 1: stack push
+		/*tmpMatrix4d1.set(MinvTMatrix);
+		matrixStack.push(tmpMatrix4d1);
+		tmpMatrix4d1.set(MinvTMatrix);
+		matrixStack.push(new Matrix4d(MMatrix));*/
 		matrixStack.push(new Matrix4d(MinvTMatrix));
 		matrixStack.push(new Matrix4d(MMatrix));
 	}

@@ -19,7 +19,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import mintools.swing.ControlFrame;
 
-/**​‌​​​‌‌​​​‌‌​​​‌​​‌‌‌​​‌
+/**
  * Class for Assignment 1, provides a viewing interface and keyframing interface for
  * a scene graph constructed with DAGNodes.
  * @author kry
