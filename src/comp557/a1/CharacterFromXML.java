@@ -122,6 +122,7 @@ public class CharacterFromXML {
 			if ( (t=getTuple3dAttr(dataNode,"center")) != null ) geom.setCentre( t );
 			if ( (t=getTuple3dAttr(dataNode,"scale")) != null ) geom.setScale( t );
 			if ( (t=getTuple3dAttr(dataNode,"color")) != null ) geom.setColor( t );
+			
 			return geom;	
 		} else {
 			System.err.println("unknown type " + type );

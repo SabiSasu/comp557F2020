@@ -115,10 +115,6 @@ public class BasicPipeline {
 	 */
 	public void push() {
 		// TODO: Objective 1: stack push
-		/*tmpMatrix4d1.set(MinvTMatrix);
-		matrixStack.push(tmpMatrix4d1);
-		tmpMatrix4d1.set(MinvTMatrix);
-		matrixStack.push(new Matrix4d(MMatrix));*/
 		matrixStack.push(new Matrix4d(MinvTMatrix));
 		matrixStack.push(new Matrix4d(MMatrix));
 	}

@@ -51,42 +51,49 @@
     	</node>
     	
     	<node type="spherical" name="hip" position="0 -0.76 0">
-        	<geom type="box" name="hip rec" center="0 0 0" scale="1.5 0.2 0.5" />
-        	<node type="spherical" name="left hip" position="-0.8 0 0">
+        	<geom type="box" name="hip rec" center="0 0 0" scale="1.2 0.2 0.5" />
+        	
+        	<node type="spherical" name="left hip" position="-0.5 0 0">
         		<geom type="sphere" name="left hip joint" center="0 0 0" scale="0.3 0.3 0.3" />
-        		<geom type="box" name="left thigh" center="0 -0.25 0" scale="0.2 0.5 0.2" />
+        		<geom type="box" name="left thigh" center="0 -0.4 0" scale="0.2 0.8 0.2"/>
     			
-    			<node type="rotary" name="left knee" position="-0.1 -0.5 0.5" axis="0 -45 45">
+    			<node type="rotary" name="left knee" position="-0 -0.8 0" axis="0 0 180">
         			<geom type="sphere" name="left knee joint" center="0 0 0" scale="0.1 0.1 0.1" />
         			<geom type="box" name="left calf" center="0 -0.25 0" scale="0.2 0.5 0.2" />
         			
-        			<node type="rotary" name="left ankle top" position="0.1 -0.5 -0.5" axis="0 -45 45">
+        			<node type="rotary" name="left ankle top" position="0 -0.5 0" axis="0 -90 45">
         				<geom type="sphere" name="left ankle top joint" center="0 0 0" scale="0.1 0.1 0.1" />
         				<geom type="box" name="left ankle top" center="0 -0.1 0" scale="0.2 0.3 0.2" />
         				
-        				<node type="spherical" name="left ankle bot" position="0 -0.3 0.3">
+        				<node type="spherical" name="left ankle bot" position="0 -0.3 0">
         					<geom type="sphere" name="left ankle bot joint" center="0 0 0" scale="0.1 0.1 0.1" />
         					<geom type="box" name="left foot" center="0 0 0.2" scale="0.2 0.1 0.3" />
     					</node>
     				</node>
     			</node>
     		</node>
-    		<node type="spherical" name="right hip" position="0.8 0 0">
-        		<geom type="sphere" name="right hip joint" center="0 0 0" scale="0.3 0.3 0.3" />
+    		
+    		<node type="spherical" name="r hip" position="0.5 0 0">
+    			<geom type="sphere" name="r hip joint" center="0 0 0" scale="0.3 0.3 0.3" />
+        		<geom type="box" name="r thigh" center="0 -0.4 0" scale="0.2 0.8 0.2"/>
         		
-        		<node type="rotary" name="right knee" position="0.1 -0.5 0.5" axis="0 -45 45">
-        			<geom type="sphere" name="right knee joint" center="0 0 0" scale="-0.1 0.1 0.1" />
+        		<node type="rotary" name="r knee" position="-0 -0.8 0" axis="0 0 180">
+        			<geom type="sphere" name="r knee joint" center="0 0 0" scale="0.1 0.1 0.1" />
+        			<geom type="box" name="r calf" center="0 -0.25 0" scale="0.2 0.5 0.2" />
         			
-        			<node type="rotary" name="right ankle top" position="-0.1 -0.5 -0.5" axis="0 -45 45">
-        				<geom type="sphere" name="right ankle top joint" center="0 0 0" scale="0.1 0.1 0.1" />
+        			<node type="rotary" name="r ankle top" position="0 -0.5 0" axis="0 -90 45">
+        				<geom type="sphere" name="r ankle top joint" center="0 0 0" scale="0.1 0.1 0.1" />
+        				<geom type="box" name="r ankle top" center="0 -0.1 0" scale="0.2 0.3 0.2" />
         				
-        				<node type="rotary" name="right ankle bot" position="0 -0.3 0.3" axis="0 -45 45">
-        					<geom type="sphere" name="right ankle bot joint" center="0 0 0" scale="0.1 0.1 0.1" />
-        					<geom type="box" name="right foot" center="0 0 0.2" scale="0.2 0.1 0.3" />
+        				<node type="spherical" name="r ankle bot" position="0 -0.3 0">
+        					<geom type="sphere" name="r ankle bot joint" center="0 0 0" scale="0.1 0.1 0.1" />
+        					<geom type="box" name="r foot" center="0 0 0.2" scale="0.2 0.1 0.3" />
     					</node>
     				</node>
     			</node>
+        		
     		</node>
+    		
     	</node>
     	
 	</node>
