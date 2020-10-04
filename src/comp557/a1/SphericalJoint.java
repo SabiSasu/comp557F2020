@@ -8,9 +8,6 @@ import mintools.parameters.DoubleParameter;
 
 public class SphericalJoint extends GraphNode {
 
-	DoubleParameter eulerX;
-	DoubleParameter eulerY;
-	DoubleParameter eulerZ;
 	DoubleParameter rx;
 	DoubleParameter ry;
 	DoubleParameter rz;
@@ -25,7 +22,6 @@ public class SphericalJoint extends GraphNode {
 	}
 	
 	public SphericalJoint(String name) {
-		// TODO Auto-generated constructor stub
 		super(name);
 	}
 
@@ -33,12 +29,12 @@ public class SphericalJoint extends GraphNode {
 	public void display( GLAutoDrawable drawable, BasicPipeline pipeline ) {
 		pipeline.push();
 		
-		// TODO: Objective 3: Freejoint, transformations must be applied before drawing children
 		pipeline.setModelingMatrixUniform(drawable.getGL().getGL4());
 		pipeline.translate(translationArray[0], translationArray[1], translationArray[2]);
 		pipeline.rotate(Math.toRadians((double)rx.getValue()), 1, 0, 0);
 		pipeline.rotate(Math.toRadians((double)ry.getValue()), 0, 1, 0);
 		pipeline.rotate(Math.toRadians((double)rz.getValue()), 0, 0, 1);
+		
 		
 		super.display( drawable, pipeline );	
 		pipeline.pop();
@@ -46,9 +42,21 @@ public class SphericalJoint extends GraphNode {
 
 	public void setPosition(Tuple3d t) {
 		this.translationArray = new double[]{t.x, t.y, t.z};
-		dofs.add( rx = new DoubleParameter( name+" rx", 0, -180, 180 ) );		
-		dofs.add( ry = new DoubleParameter( name+" ry", 0, -180, 180 ) );
-		dofs.add( rz = new DoubleParameter( name+" rz", 0, -180, 180 ) );
+		
+	}
+	
+	public void setAxisX(Tuple3d t) {
+		dofs.add( rx = new DoubleParameter( name+" rx", t.x, t.y, t.z ) );
+		
+	}
+	
+	public void setAxisY(Tuple3d t) {
+		dofs.add( ry = new DoubleParameter( name+" ry", t.x, t.y, t.z ) );
+		
+	}
+	
+	public void setAxisZ(Tuple3d t) {
+		dofs.add( rz = new DoubleParameter( name+" rz", t.x, t.y, t.z ) );
 		
 	}
 	

@@ -85,6 +85,9 @@ public class CharacterFromXML {
 
 			SphericalJoint joint = new SphericalJoint( name );
 			if ( (t=getTuple3dAttr(dataNode,"position")) != null ) joint.setPosition( t );			
+			if ( (t=getTuple3dAttr(dataNode,"rotX")) != null ) joint.setAxisX(t); else joint.setAxisX(new Vector3d(0, -180, 180));
+			if ( (t=getTuple3dAttr(dataNode,"rotY")) != null ) joint.setAxisY(t);	else joint.setAxisY(new Vector3d(0, -180, 180));
+			if ( (t=getTuple3dAttr(dataNode,"rotZ")) != null ) joint.setAxisZ(t);	else joint.setAxisZ(new Vector3d(0, -180, 180));
 			return joint;
 			
 		} else if ( type.equals("rotary") ) {

@@ -8,52 +8,52 @@
     	
     	
     	
-    	<node type="spherical" name="neck" position="0 0.7 0">
+    	<node type="rotary" name="neck" position="0 0.7 0" axis="1 -45 45">
     		<geom type="box" name="neck rec" center="0 0 0" scale="1.4 0.2 0.5" />
     		
-    		<node type="spherical" name="left shoulder" position="-0.7 0 0">
+    		<node type="spherical" name="left shoulder" position="-0.7 0 0" rotX="0 -180 45" rotY="0 -45 45" rotZ="0 -180 5">
         		<geom type="sphere" name="left shoulder joint" center="0 0 0" scale="0.2 0.2 0.2" />
         		<geom type="box" name="left upper arm" center="0 -0.5 0" scale="0.2 1 0.2" />
     			
     			<node type="rotary" name="left elbow" position="0 -1 0" axis="0 -90 0">
         			<geom type="sphere" name="left elbow joint" center="0 0 0" scale="0.1 0.1 0.1" />
         			<geom type="box" name="left lower arm" center="0 -0.5 0" scale="0.2 1 0.2" />
-        			<geom type="sphere" name="left hand" center="0 -1 0" scale="0.2 0.2 0.2" />
+        			<geom type="sphere" name="left hand" center="0 -1 0" scale="0.2 0.2 0.2" color="1 1 1"/>
         			
     			</node>
     		</node>
     		
-    		<node type="spherical" name="right shoulder" position="0.7 0 0">
+    		<node type="spherical" name="right shoulder" position="0.7 0 0" rotX="0 -180 45" rotY="0 -45 45" rotZ="0 -5 180">
         		<geom type="sphere" name="right shoulder joint" center="0 0 0" scale="0.2 0.2 0.2" />
         		<geom type="box" name="right upper arm" center="0 -0.5 0" scale="0.2 1 0.2" />
     			
     			<node type="rotary" name="right elbow" position="0 -1 0" axis="0 -90 0">
         			<geom type="sphere" name="right elbow joint" center="0 0 0" scale="0.1 0.1 0.1" />
         			<geom type="box" name="right lower arm" center="0 -0.5 0" scale="0.2 1 0.2" />
-        			<geom type="sphere" name="right hand" center="0 -1 0" scale="0.2 0.2 0.2" />
+        			<geom type="sphere" name="right hand" center="0 -1 0" scale="0.2 0.2 0.2" color="1 1 1"/>
         			
     			</node>
     		</node>
     		
     		
-    		<node type="spherical" name="neck lower" position="0 0 0">
-	    		<geom type="box" name="neck lower" center="0 0.4 0" scale="0.2 0.8 0.2" />
+    		<node type="rotary" name="neck lower" position="0 0 0" axis="2 -20 20">
+	    		<geom type="box" name="neck lower" center="0 0.4 0" scale="0.2 0.8 0.2" color="1 1 1"/>
 		    		
-		    	<node type="spherical" name="neck middle" position="0 0.8 0">
-		        	<geom type="box" name="neck upper" center="0 0.4 0" scale="0.2 0.8 0.2" />
+		    	<node type="rotary" name="neck middle" position="0 0.8 0" axis="2 -20 20">
+		        	<geom type="box" name="neck upper" center="0 0.4 0" scale="0.2 0.8 0.2" color="1 1 1"/>
 		    			
-		    		<node type="spherical" name="head joint" position="0 0.8 0">
-		        		<geom type="sphere" name="head sphere" center="0 0.2 0" scale="0.4 0.4 0.4" />
+		    		<node type="spherical" name="head joint" position="0 0.8 0" rotX="0 -100 20" rotY="0 -45 45" rotZ="0 -25 25">
+		        		<geom type="sphere" name="head sphere" center="0 0.2 0" scale="0.4 0.4 0.4" color="1 1 1"/>
 		        			
 		    		</node>
 		    	</node>
     		</node>
     	</node>
     	
-    	<node type="spherical" name="hip" position="0 -0.76 0">
+    	<node type="spherical" name="hip" position="0 -0.76 0" rotX="-45 -100 20" rotY="0 -45 45" rotZ="0 -25 25">
         	<geom type="box" name="hip rec" center="0 0 0" scale="1.2 0.2 0.5" />
         	
-        	<node type="spherical" name="left hip" position="-0.5 0 0">
+        	<node type="spherical" name="left hip" position="-0.5 0 0" rotX="0 -100 100" rotY="0 -45 45" rotZ="0 -100 15">
         		<geom type="sphere" name="left hip joint" center="0 0 0" scale="0.3 0.3 0.3" />
         		<geom type="box" name="left thigh" center="0 -0.4 0" scale="0.2 0.8 0.2"/>
     			
@@ -65,7 +65,7 @@
         				<geom type="sphere" name="left ankle top joint" center="0 0 0" scale="0.1 0.1 0.1" />
         				<geom type="box" name="left ankle top" center="0 -0.1 0" scale="0.2 0.3 0.2" />
         				
-        				<node type="spherical" name="left ankle bot" position="0 -0.3 0">
+        				<node type="spherical" name="left ankle bot" position="0 -0.3 0" rotX="0 -20 90" rotY="0 -55 20" rotZ="0 -5 5">
         					<geom type="sphere" name="left ankle bot joint" center="0 0 0" scale="0.1 0.1 0.1" />
         					<geom type="box" name="left foot" center="0 0 0.2" scale="0.2 0.1 0.3" />
     					</node>
@@ -73,7 +73,7 @@
     			</node>
     		</node>
     		
-    		<node type="spherical" name="r hip" position="0.5 0 0">
+    		<node type="spherical" name="r hip" position="0.5 0 0" rotX="-45 -100 100" rotY="0 -45 45" rotZ="0 -15 100">
     			<geom type="sphere" name="r hip joint" center="0 0 0" scale="0.3 0.3 0.3" />
         		<geom type="box" name="r thigh" center="0 -0.4 0" scale="0.2 0.8 0.2"/>
         		
@@ -85,7 +85,7 @@
         				<geom type="sphere" name="r ankle top joint" center="0 0 0" scale="0.1 0.1 0.1" />
         				<geom type="box" name="r ankle top" center="0 -0.1 0" scale="0.2 0.3 0.2" />
         				
-        				<node type="spherical" name="r ankle bot" position="0 -0.3 0">
+        				<node type="spherical" name="r ankle bot" position="0 -0.3 0" rotX="0 -20 90" rotY="0 -20 55" rotZ="0 -5 5">
         					<geom type="sphere" name="r ankle bot joint" center="0 0 0" scale="0.1 0.1 0.1" />
         					<geom type="box" name="r foot" center="0 0 0.2" scale="0.2 0.1 0.3" />
     					</node>

@@ -82,7 +82,7 @@ public class A1App implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         drawable.setGL(new DebugGL4(drawable.getGL().getGL4()));
         GL4 gl = drawable.getGL().getGL4();
-        gl.glClearColor(0.1f, 0.0f, 0.0f, 0.3f); // TODO: Objective 0, change the background colour as you like!
+        gl.glClearColor(0.68f, 0.98f, 1.0f, 1f); // TODO: Objective 0, change the background colour as you like!
         gl.glClearDepth(1.0f); // Depth Buffer Setup
         gl.glEnable(GL4.GL_DEPTH_TEST); // Enables Depth Testing
         gl.glDepthFunc(GL4.GL_LEQUAL); // The Type Of Depth Testing To Do

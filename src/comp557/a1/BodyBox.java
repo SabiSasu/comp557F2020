@@ -17,7 +17,7 @@ public class BodyBox extends GraphNode {
 	DoubleParameter rz;
 	double[] translationArray = new double[]{0, 0, 0};
 	private double[] scaleArray = new double[]{1, 1, 1};
-	private double[] colorArray ;
+	private float[] colorArray = new float[] {1f, 1f, 1f};
 		
 	
 	public BodyBox(String name) {
@@ -32,7 +32,7 @@ public class BodyBox extends GraphNode {
 		pipeline.setModelingMatrixUniform(drawable.getGL().getGL4());
 		pipeline.translate(translationArray[0], translationArray[1], translationArray[2]);
 		pipeline.scale(scaleArray[0], scaleArray[1], scaleArray[2]);
-		
+		pipeline.setColor(drawable.getGL().getGL4(), colorArray[0], colorArray[1], colorArray[2]);
 		Cube.draw(drawable, pipeline);
 		super.display( drawable, pipeline );	
 		pipeline.pop();
@@ -49,7 +49,7 @@ public class BodyBox extends GraphNode {
 	}
 
 	public void setColor(Tuple3d t) {
-		this.colorArray = new double[]{t.x, t.y, t.z};
+		this.colorArray = new float[]{(float) t.x, (float) t.y, (float) t.z};
 		
 	}
 	

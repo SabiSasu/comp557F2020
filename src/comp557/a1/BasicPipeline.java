@@ -8,6 +8,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLException;
@@ -32,10 +33,12 @@ public class BasicPipeline {
     
     /** TODO: Objective 7: material properties, minimally kd is set up, but add more as necessary */
     /** You will want to use this with a glUniform3f call to set the r g b reflectance properties, each being between 0 and 1 */
-    public int kdID;
+    public int kdID; //diffuse light coefficient
     
     /** TODO: Objective 8: lighting direction, minimally one direction is setup , but add more as necessary */
     public int lightDirID;
+    public int lightColorID;
+    public int viewDirID;
     
     public int positionAttributeID;
     public int normalAttributeID;
@@ -74,6 +77,8 @@ public class BasicPipeline {
         PMatrixID = gl.glGetUniformLocation( glslProgramID, "P" );
         kdID = gl.glGetUniformLocation( glslProgramID, "kd" );
         lightDirID = gl.glGetUniformLocation( glslProgramID, "lightDir" );
+        lightColorID = gl.glGetUniformLocation( glslProgramID, "lightColor" );
+        viewDirID = gl.glGetUniformLocation( glslProgramID, "viewPos" );
         positionAttributeID = gl.glGetAttribLocation( glslProgramID, "position" );
         normalAttributeID = gl.glGetAttribLocation( glslProgramID, "normal" );
 	}
@@ -94,9 +99,18 @@ public class BasicPipeline {
         glUniformMatrix( gl, MinvTMatrixID, MinvTMatrix );
 
         // TODO: Objective 7: GLSL lighting, you may want to provide 
-        Vector3f lightDir = new Vector3f( 1, 1, 1 );
+        Vector3f lightDir = new Vector3f( 1f, 1f, 10f );
         lightDir.normalize();
         gl.glUniform3f( lightDirID, lightDir.x, lightDir.y, lightDir.z );
+        
+        Vector3f lightColor = new Vector3f( 0.5f, 0.5f, 0.5f );
+        //lightColor.normalize();
+        gl.glUniform3f( lightColorID, lightColor.x, lightColor.y, lightColor.z );
+        
+        Vector3f viewDir = new Vector3f( 0f, 0f, 2.5f );
+        //viewDir.normalize();
+        gl.glUniform3f( viewDirID, viewDir.x, viewDir.y, viewDir.z );
+        
 	}
 	
 	/** Sets the modeling matrix with the current top of the stack */
@@ -104,6 +118,7 @@ public class BasicPipeline {
 		// TODO: Objective 1: make sure you send the top of the stack modeling and inverse transpose matrices to GLSL
 		glUniformMatrix( gl, MMatrixID, MMatrix );
 		glUniformMatrix( gl, MinvTMatrixID, MinvTMatrix);
+		
 	}
 	
 	private Matrix4d tmpMatrix4d1 = new Matrix4d();
@@ -277,6 +292,11 @@ public class BasicPipeline {
         float screeny = (float) ((1 - vec.y) / 2 * h); 
 		fontTexture.drawTextLines(drawable, text, screenx, screeny, 32, 1,1,1 );
 		enable(drawable); // go back to our basic pipeline... but note regular context switches are expensive :(
+	}
+
+	public void setColor(GL4 gl, float f, float g, float h) {
+		gl.glUniform3f(this.kdID, f, g, h);
+		
 	}
 	
 }
