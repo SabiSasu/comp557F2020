@@ -1,3 +1,7 @@
+/**
+ * COMP 557 - Assig 1
+ * @author Sabina Sasu, 260803977
+ */
 package comp557.a1;
 
 import java.util.Stack;
@@ -37,6 +41,8 @@ public class BasicPipeline {
     
     /** TODO: Objective 8: lighting direction, minimally one direction is setup , but add more as necessary */
     public int lightDirID;
+    public int lightDirID2;
+    public int lightDirID3;
     public int lightColorID;
     public int viewDirID;
     
@@ -76,7 +82,9 @@ public class BasicPipeline {
         VMatrixID = gl.glGetUniformLocation( glslProgramID, "V" );
         PMatrixID = gl.glGetUniformLocation( glslProgramID, "P" );
         kdID = gl.glGetUniformLocation( glslProgramID, "kd" );
-        lightDirID = gl.glGetUniformLocation( glslProgramID, "lightDir" );
+        lightDirID = gl.glGetUniformLocation( glslProgramID, "lightPos" );
+        lightDirID2 = gl.glGetUniformLocation( glslProgramID, "lightPos2" );
+        lightDirID3 = gl.glGetUniformLocation( glslProgramID, "lightPos3" );
         lightColorID = gl.glGetUniformLocation( glslProgramID, "lightColor" );
         viewDirID = gl.glGetUniformLocation( glslProgramID, "viewPos" );
         positionAttributeID = gl.glGetAttribLocation( glslProgramID, "position" );
@@ -99,8 +107,8 @@ public class BasicPipeline {
         glUniformMatrix( gl, MinvTMatrixID, MinvTMatrix );
 
         // TODO: Objective 7: GLSL lighting, you may want to provide 
-        Vector3f lightDir = new Vector3f( 1f, 1f, 10f );
-        lightDir.normalize();
+        Vector3f lightDir = new Vector3f( 1f, 0f, 1f );
+        //lightDir.normalize();
         gl.glUniform3f( lightDirID, lightDir.x, lightDir.y, lightDir.z );
         
         Vector3f lightColor = new Vector3f( 0.5f, 0.5f, 0.5f );
@@ -110,6 +118,15 @@ public class BasicPipeline {
         Vector3f viewDir = new Vector3f( 0f, 0f, 2.5f );
         //viewDir.normalize();
         gl.glUniform3f( viewDirID, viewDir.x, viewDir.y, viewDir.z );
+        
+        
+        Vector3f lightDir2 = new Vector3f( -5f, 5f, 0f );
+        //lightDir2.normalize();
+        gl.glUniform3f( lightDirID2, lightDir2.x, lightDir2.y, lightDir2.z );
+        
+        Vector3f lightDir3 = new Vector3f( 0f, -1f, 1f );
+        //lightDir2.normalize();
+        gl.glUniform3f( lightDirID3, lightDir3.x, lightDir3.y, lightDir3.z );
         
 	}
 	

@@ -1,3 +1,7 @@
+/**
+ * COMP 557 - Assig 1
+ * @author Sabina Sasu, 260803977
+ */
 package comp557.a1;
 
 import javax.swing.JTextField;

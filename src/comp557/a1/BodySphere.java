@@ -7,7 +7,11 @@ import com.jogamp.opengl.GLAutoDrawable;
 import comp557.a1.geom.Cube;
 import comp557.a1.geom.Sphere;
 import mintools.parameters.DoubleParameter;
-
+/**
+ * COMP 557 - Assig 1
+ * @author Sabina Sasu, 260803977
+ *
+ */
 public class BodySphere extends GraphNode {
 
 	DoubleParameter eulerX;

@@ -5,7 +5,10 @@ import javax.vecmath.Tuple3d;
 import com.jogamp.opengl.GLAutoDrawable;
 
 import mintools.parameters.DoubleParameter;
-
+/**
+ * COMP 557 - Assig 1
+ * @author Sabina Sasu, 260803977
+ */
 public class SphericalJoint extends GraphNode {
 
 	DoubleParameter rx;
