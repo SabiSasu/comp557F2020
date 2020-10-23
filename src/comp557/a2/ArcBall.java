@@ -84,7 +84,7 @@ public class ArcBall {
 						newRot.x = Perp.x;
 						newRot.y = Perp.y;
 						newRot.z = Perp.z;
-						newRot.w = clickVector.dot(dragVector);
+						newRot.w = clickVector.dot(dragVector) * gain.getValue();
 					} 
 					else {
 						newRot.x = newRot.y = newRot.z = newRot.w = 0.0f;
@@ -94,7 +94,8 @@ public class ArcBall {
 					//newRot.mul(qstart);
 					Matrix4d temp = new Matrix4d();
 					temp.set(newRot);
-					R.mul(temp); //to fix
+					//R.mul(temp); //to fix
+					R.set(temp);
 				}
 			}
 		});

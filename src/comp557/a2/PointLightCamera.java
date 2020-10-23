@@ -42,8 +42,10 @@ public class PointLightCamera extends Camera {
 		pipeline.disableLighting(drawable);
 
     	// TODO: Objective 4: draw the light frame using a fancy axis... You must set up the right transformation!
-    	
+		pipeline.push();
+		pipeline.translate(drawable, position.x, position.y, -position.z);
 		FancyAxis.draw(drawable, pipeline);
+		pipeline.pop(drawable);
 
 
 		// TODO: Objective 5: draw the light camera frustum using the inverse projection with a wire cube. You must set up the right transformation!
