@@ -69,61 +69,59 @@ public class Camera {
     	w.sub(positionP, lookatP);
     	w.normalize();
     	Vector3d u  = new Vector3d();
-    	upP.normalize();
+    	//upP.normalize();
     	u.cross(upP, w);
     	u.normalize();
     	Vector3d v  = new Vector3d();
     	v.cross(w, u);
-
+    	/*
     	 V.set( new double[] {
- 				u.x, v.x, w.x,  -positionP.x,
- 				u.y, v.y, w.y,  -positionP.y,
- 				u.y, v.z, w.z,  -positionP.z,
+ 				u.x, v.x, w.x,  -positionP.dot(u),
+ 				u.y, v.y, w.y,  -positionP.dot(v),
+ 				u.z, v.z, w.z,  -positionP.dot(w),
+ 		  		0,  0,  0,  1,
+ 		  } );
+ 		  
+    	*/
+    	V.set( new double[] {
+ 				u.x, u.y, u.z,  -positionP.dot(u),
+ 				v.x, v.y, v.z,  -positionP.dot(v),
+ 				w.x, w.y, w.z,  -positionP.dot(w),
  		  		0,  0,  0,  1,
  		  } );
     	 
     	// TODO: Objective 3: Replace the default projection matrix with one constructed from the parameters available in this class!
     	 double n = near.getValue();
     	 double f = far.getValue();
-    	 double S = 1/Math.atan(Math.toRadians(fovy.getValue()) / 2);
+    	 //double S = 1/Math.atan(Math.toRadians(fovy.getValue()) / 2);
+    	 double tanHFov = Math.atan(Math.toRadians(fovy.getValue()) / 2);
+    	 double aspectRatio = width / height;
+    	 
+    	 double hNearWidth = tanHFov * n * aspectRatio;
+    	 double hNearHeight = tanHFov * n;
+    	 double r = hNearWidth;
+    	 double t = hNearHeight;
+    	 double l = -hNearWidth;
+    	 double b = -hNearHeight;
+    	 
+    	 Matrix4d projection = new Matrix4d(new double[] {
+    			 2 * n / (r - l),  0,  (r + l) / (r - l),  0,
+           		0,  2 * n / (t - b),  (t + b) / (t - b),  0,
+           		0,  0, (f + n) / (n - f), 2 * f * n / (n - f),
+           		0,  0, -1,  0,
+           } );
+           
+     	 P.set(projection);
+    	 /*
     	 Matrix4d projection = new Matrix4d(new double[] {
      			S,  0,  0,  0,
           		0,  S,  0,  0,
           		0,  0, -f/(f-n), -f*n/(f-n),
           		0,  0, -1,  0,
           } );
+          
     	 P.set(projection);
-    	 /*Matrix4d projection = new Matrix4d(new double[] {
-    			near.getValue(),  0,  0,  0,
-         		0,  near.getValue(),  0,  0,
-         		0,  0, near.getValue()+far.getValue(), near.getValue()*far.getValue(),
-         		0,  0, -1,  0,
-         } );
-    	 double nearHeight = 2 * Math.atan(Math.toRadians(fovy.getValue()) / 2) * near.getValue();
-    	 double nearWidth = nearHeight * (width/height);
-    	 Vector3d nearCenter = new Vector3d();
-    	 nearCenter.add(positionP, new Vector3d(lookatP.x*near.getValue(),lookatP.y*near.getValue(),lookatP.z*near.getValue()));
-    	 Vector3d topRight = nearCenter + (up * (nearHeight / 2)) + (u * (nearWidth / 2));
-    	 Vector3d botLeft = nearCenter - (up * (nearHeight / 2)) - (u * (nearWidth /2));
-    	 double r = topRight.x;
-    	 double t = topRight.y;
-    	 double l = botLeft.x;
-    	 double b = botLeft.y;
-    	 
-    	 Matrix4d orthographic = new Matrix4d(new double[] {
-         		2/(r-l),  0,  0, -(r+l)/(r-l),
-         		0,  2/(t-b),  0,  -(t+b)/(t-b),
-         		0,  0, 2/(near.getValue()-far.getValue()), (near.getValue()+far.getValue())/(near.getValue()-far.getValue()),
-         		0,  0, 0,  1,
-         } );
-    	 
-    	 P.mul(projection, orthographic);    
-    	/*
-    	 * 		1,  0,  0,  0,
-         		0,  1,  0,  0,
-         		0,  0, -2, -3,
-         		0,  0, -1,  1,
-    	 */
+ 		*/
     }
     
     /**

@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
@@ -84,7 +85,7 @@ public class ArcBall {
 						newRot.x = Perp.x;
 						newRot.y = Perp.y;
 						newRot.z = Perp.z;
-						newRot.w = clickVector.dot(dragVector) * gain.getValue();
+						newRot.w = clickVector.dot(dragVector);// * gain.getValue();
 					} 
 					else {
 						newRot.x = newRot.y = newRot.z = newRot.w = 0.0f;
@@ -94,6 +95,8 @@ public class ArcBall {
 					//newRot.mul(qstart);
 					Matrix4d temp = new Matrix4d();
 					temp.set(newRot);
+					AxisAngle4d aa = new AxisAngle4d( newRot.x, newRot.y, newRot.z, newRot.w );
+					//temp.set(aa);
 					//R.mul(temp); //to fix
 					R.set(temp);
 				}
@@ -106,7 +109,6 @@ public class ArcBall {
 			public void mousePressed( MouseEvent e) {
 				// TODO: Objective 1: arcball interaction starts when mouse is clickedcenter
 				setVecFromMouseEvent( e, clickVector );
-				System.out.println(clickVector.toString());
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {}
