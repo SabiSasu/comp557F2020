@@ -55,10 +55,10 @@ public class ArcBall {
 		double pointy = (mousey - height/2.0)/radius;
 		double r = (pointx * pointx) + (pointy * pointy);
 		
-		if (r > 1) { 
-			double s = 1.0 / Math.sqrt(r); //is 1 actually the gain?
-			v.x = r*s;
-			v.y = r*s;
+		if (r > Math.pow(radius, 2)) { 
+			double s = 1.0 / Math.sqrt(r);
+			v.x = pointx*s* gain.getValue();;
+			v.y = pointy*s* gain.getValue();;
 			v.z = 0;
 		} 
 		else {
@@ -90,15 +90,12 @@ public class ArcBall {
 					else {
 						newRot.x = newRot.y = newRot.z = newRot.w = 0.0f;
 					}
-					//Quat4d qstart = new Quat4d();
-					//qstart.set(R);
-					//newRot.mul(qstart);
+					Quat4d qstart = new Quat4d();
+					qstart.set(R);
+					newRot.mul(qstart);
 					Matrix4d temp = new Matrix4d();
 					temp.set(newRot);
-					AxisAngle4d aa = new AxisAngle4d( newRot.x, newRot.y, newRot.z, newRot.w );
-					//temp.set(aa);
-					//R.mul(temp); //to fix
-					R.set(temp);
+					R.set(temp); 
 				}
 			}
 		});

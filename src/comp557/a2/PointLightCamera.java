@@ -59,25 +59,17 @@ public class PointLightCamera extends Camera {
 		temp.invert();
 		if(temp.determinant() != 0) {
 			pipeline.multMatrix(drawable, temp);
-			pipeline.scale(drawable, 2, 2, 2);
 			
 		}
 		pipeline.setkd( drawable, 1, 1, 1 );
 		WireCube.draw( drawable, pipeline );
 		pipeline.pop(drawable);
-		 double tanHFov = Math.atan(Math.toRadians(fovy.getValue()) / 2);
-    	// double aspectRatio = width / height;
-    	 
-    	 //double hNearWidth = tanHFov * near.getValue() * aspectRatio;
-    	 double hNearHeight = tanHFov * near.getValue();
-    	 
-		// TODO: Objective 5: draw the light view on the near plane of the frustum. You must set up the right transformation! 
+
+		// TODO: Objective 6: draw the light view on the near plane of the frustum. You must set up the right transformation! 
 		// That is, translate and scale the x and y directions of the -1 to 1 quad so that the quad fits exactly the l r t b portion of the near plane
 		pipeline.push();
-		//pipeline.multMatrix(drawable, Vinv);
 		pipeline.multMatrix(drawable, temp);
 		pipeline.translate(drawable, 0, 0, -near.getValue());
-		pipeline.scale(drawable, 1, 1, -1);
 		
 		pipeline.debugLightTexture(drawable);
 		QuadWithTexCoords.draw( drawable, pipeline );
