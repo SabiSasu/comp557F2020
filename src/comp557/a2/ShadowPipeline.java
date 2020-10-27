@@ -1,6 +1,11 @@
+/**
+ * COMP 557 - Assig 2
+ * @author Sabina Sasu, 260803977
+ */
 package comp557.a2;
 
 import java.awt.Component;
+import java.nio.DoubleBuffer;
 
 import javax.management.RuntimeErrorException;
 import javax.swing.JPanel;
@@ -55,6 +60,9 @@ public class ShadowPipeline {
     private Vector4d tmpLightPos = new Vector4d();
 
     ShadowMap shadowMap = new ShadowMap( 1024 );
+
+    private int lightPID;
+    private int lightVID;
 	        
 	public ShadowPipeline( GLAutoDrawable drawable ) {
 				
@@ -81,7 +89,8 @@ public class ShadowPipeline {
         sigmaID = gl.glGetUniformLocation( basicLighting.glslProgramID, "sigma" );
         shadowMapID = gl.glGetUniformLocation( basicLighting.glslProgramID, "shadowMap" );       
         // TODO: Objective 7, add extra uniforms to the basic lighting program help compute fragment in the light camera canonical viewing volume
-        
+        lightPID = gl.glGetUniformLocation( basicLighting.glslProgramID, "LightP" );
+        lightVID = gl.glGetUniformLocation( basicLighting.glslProgramID, "LightV" );
         
         // Texture and program for drawing depth view from light and debugging the depth view
         shadowMap.setupDepthTextureFrameBuffer(drawable);
@@ -139,7 +148,8 @@ public class ShadowPipeline {
 		gl.glUniform1i( shadowMapID, 0 ); // texture unit zero
 
 		// TODO: Objective 7: be sure to set extra uniforms to transform fragments to the camera canonical viewing volume.
-
+		currentGLSLProgram.glUniformMatrix( gl, lightPID, light.P );
+		currentGLSLProgram.glUniformMatrix( gl, lightVID, light.V );
 	}
 
 	/**

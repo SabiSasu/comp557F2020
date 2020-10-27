@@ -1,3 +1,7 @@
+/**
+ * COMP 557 - Assig 2
+ * @author Sabina Sasu, 260803977
+ */
 package comp557.a2;
 
 import javax.swing.JPanel;
@@ -64,12 +68,13 @@ public class PointLightCamera extends Camera {
 		pipeline.setkd( drawable, 1, 1, 1 );
 		WireCube.draw( drawable, pipeline );
 		pipeline.pop(drawable);
-
+		
 		// TODO: Objective 6: draw the light view on the near plane of the frustum. You must set up the right transformation! 
 		// That is, translate and scale the x and y directions of the -1 to 1 quad so that the quad fits exactly the l r t b portion of the near plane
 		pipeline.push();
+		
 		pipeline.multMatrix(drawable, temp);
-		pipeline.translate(drawable, 0, 0, -near.getValue());
+		pipeline.translate(drawable, 0, 0, -1);
 		
 		pipeline.debugLightTexture(drawable);
 		QuadWithTexCoords.draw( drawable, pipeline );

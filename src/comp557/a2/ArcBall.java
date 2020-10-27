@@ -1,3 +1,8 @@
+/**
+ * COMP 557 - Assig 2
+ * @author Sabina Sasu, 260803977
+ */
+
 package comp557.a2;
 
 import java.awt.Component;
@@ -57,8 +62,8 @@ public class ArcBall {
 		
 		if (r > Math.pow(radius, 2)) { 
 			double s = 1.0 / Math.sqrt(r);
-			v.x = pointx*s* gain.getValue();;
-			v.y = pointy*s* gain.getValue();;
+			v.x = pointx*s;
+			v.y = pointy*s;
 			v.z = 0;
 		} 
 		else {
@@ -80,22 +85,17 @@ public class ArcBall {
 					setVecFromMouseEvent(e, dragVector);
 					Vector3d Perp = new Vector3d();
 					Perp.cross(clickVector, dragVector);
-					Quat4d newRot = new Quat4d();
+					AxisAngle4d newRot = new AxisAngle4d( 0, 0, 0, Math.acos(0)*gain.getValue() );
 					if (Perp.length() > 0) {
 						newRot.x = Perp.x;
 						newRot.y = Perp.y;
 						newRot.z = Perp.z;
-						newRot.w = clickVector.dot(dragVector);// * gain.getValue();
-					} 
-					else {
-						newRot.x = newRot.y = newRot.z = newRot.w = 0.0f;
+						newRot.angle =  Math.acos(clickVector.dot(dragVector))*gain.getValue();
+						
 					}
-					Quat4d qstart = new Quat4d();
-					qstart.set(R);
-					newRot.mul(qstart);
 					Matrix4d temp = new Matrix4d();
 					temp.set(newRot);
-					R.set(temp); 
+					R.mul(temp); 
 				}
 			}
 		});

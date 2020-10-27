@@ -1,3 +1,7 @@
+/**
+ * COMP 557 - Assig 2
+ * @author Sabina Sasu, 260803977
+ */
 package comp557.a2;
 
 import javax.swing.JPanel;
@@ -74,15 +78,7 @@ public class Camera {
     	u.normalize();
     	Vector3d v  = new Vector3d();
     	v.cross(w, u);
-    	/*
-    	 V.set( new double[] {
- 				u.x, v.x, w.x,  -positionP.dot(u),
- 				u.y, v.y, w.y,  -positionP.dot(v),
- 				u.z, v.z, w.z,  -positionP.dot(w),
- 		  		0,  0,  0,  1,
- 		  } );
- 		  
-    	*/
+
     	V.set( new double[] {
  				u.x, u.y, u.z,  -positionP.dot(u),
  				v.x, v.y, v.z,  -positionP.dot(v),
@@ -93,7 +89,6 @@ public class Camera {
     	// TODO: Objective 3: Replace the default projection matrix with one constructed from the parameters available in this class!
     	 double n = near.getValue();
     	 double f = far.getValue();
-    	 //double S = 1/Math.atan(Math.toRadians(fovy.getValue()) / 2);
     	 double tanHFov = Math.atan(Math.toRadians(fovy.getValue()) / 2);
     	 double aspectRatio = width / height;
     	 
@@ -112,16 +107,6 @@ public class Camera {
            } );
            
      	 P.set(projection);
-    	 /*
-    	 Matrix4d projection = new Matrix4d(new double[] {
-     			S,  0,  0,  0,
-          		0,  S,  0,  0,
-          		0,  0, -f/(f-n), -f*n/(f-n),
-          		0,  0, -1,  0,
-          } );
-          
-    	 P.set(projection);
- 		*/
     }
     
     /**
