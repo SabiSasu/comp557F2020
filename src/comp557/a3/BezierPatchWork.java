@@ -1,5 +1,5 @@
 /*
- * YOUR NAME AND STUDENT NUMBER HERE
+ * Sabina Sasu, 260803977
  */
 
 package comp557.a3;
@@ -287,8 +287,8 @@ public class BezierPatchWork {
 		int n = 3;
 		for (int i = 0; i <= n; i++) {
 		    for (int j = 0; j <= n; j++) {
-		    	double poly_i = bernstein_polynomial(i, n, s);
-		    	double poly_j = bernstein_polynomial(j, n, t);
+		    	double poly_i = bernPoly(i, n, s);
+		    	double poly_j = bernPoly(j, n, t);
 		    	vec.x += poly_i * poly_j * coordinatePatch[patch][0].getElement(i, j);
 		    	vec.y += poly_i * poly_j * coordinatePatch[patch][1].getElement(i, j);
 		    	vec.z += poly_i * poly_j * coordinatePatch[patch][2].getElement(i, j);
@@ -296,7 +296,7 @@ public class BezierPatchWork {
 		  }
 		return vec;
 	}
-	double bernstein_polynomial(int i, int n, double u) {
+	double bernPoly(int i, int n, double u) {
 		return (double)(choose(n, i) * Math.pow(u, i) * Math.pow(1-u, n-i));
 	}
 	
@@ -314,9 +314,8 @@ public class BezierPatchWork {
 		int n = 3;
 		for (int i = 0; i <= n-1; i++) {
 		    for (int j = 0; j <= n; j++) {
-		    	double poly_i = bernstein_polynomial(i, n-1, s);
-		    	double poly_j = bernstein_polynomial(j, n, t);
-		    	//double poly_j = 1;
+		    	double poly_i = bernPoly(i, n-1, s);
+		    	double poly_j = bernPoly(j, n, t);
 		    	vec.x += poly_i * poly_j * n*(coordinatePatch[patch][0].getElement(i+1, j) - coordinatePatch[patch][0].getElement(i, j));
 		    	vec.y += poly_i * poly_j * n*(coordinatePatch[patch][1].getElement(i+1, j) - coordinatePatch[patch][1].getElement(i, j));
 		    	vec.z += poly_i * poly_j * n*(coordinatePatch[patch][2].getElement(i+1, j) - coordinatePatch[patch][2].getElement(i, j));
@@ -333,9 +332,8 @@ public class BezierPatchWork {
 		int n = 3;
 		for (int i = 0; i <= n; i++) {
 		    for (int j = 0; j <= n-1; j++) {
-		    	double poly_i = bernstein_polynomial(i, n, s);
-		    	//double poly_i = 1;
-		    	double poly_j = bernstein_polynomial(j, n-1, t);
+		    	double poly_i = bernPoly(i, n, s);
+		    	double poly_j = bernPoly(j, n-1, t);
 		    	vec.x += poly_i * poly_j * n*(coordinatePatch[patch][0].getElement(i, j+1) - coordinatePatch[patch][0].getElement(i, j));
 		    	vec.y += poly_i * poly_j * n*(coordinatePatch[patch][1].getElement(i, j+1) - coordinatePatch[patch][1].getElement(i, j));
 		    	vec.z += poly_i * poly_j * n*(coordinatePatch[patch][2].getElement(i, j+1) - coordinatePatch[patch][2].getElement(i, j));
@@ -351,10 +349,17 @@ public class BezierPatchWork {
 	 */
 	private Vector3d evalNormal(double s, double t, int patch) {
 		// TODO: Objective 4,5: compute the normal, and make sure the normal is always well defined!
+
 		Vector3d ds = differentiateS(s, t, patch);
 		Vector3d dt = differentiateT(s, t, patch);
         Vector3d result = new Vector3d(0, 0, 0);
         result.cross(ds, dt);
+        result.normalize();
+        //fix if the result vector is nan
+        if(Double.isNaN(result.x) || Double.isNaN(result.y) || Double.isNaN(result.z)) {
+        	result = new Vector3d(0, 1, 0);
+        }
+        
 		return result;
 	}
 }
