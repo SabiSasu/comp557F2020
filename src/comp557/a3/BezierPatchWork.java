@@ -351,8 +351,10 @@ public class BezierPatchWork {
 	 */
 	private Vector3d evalNormal(double s, double t, int patch) {
 		// TODO: Objective 4,5: compute the normal, and make sure the normal is always well defined!
-
-		
-		return new Vector3d();
+		Vector3d ds = differentiateS(s, t, patch);
+		Vector3d dt = differentiateT(s, t, patch);
+        Vector3d result = new Vector3d(0, 0, 0);
+        result.cross(ds, dt);
+		return result;
 	}
 }
