@@ -19,6 +19,7 @@ import com.jogamp.opengl.util.GLBuffers;
 
 import mintools.parameters.IntParameter;
 import mintools.viewer.ShadowPipeline;
+import mintools.viewer.geom.Sphere;
 
 /**
  * BezierMesh is a class for loads a collection of Bezier patches and displaying them using OpenGL.
@@ -54,10 +55,17 @@ public class BezierPatchWork {
      */
     public void drawControlPoints( GLAutoDrawable drawable, ShadowPipeline pipeline, int patch ) {
     	pipeline.setkd(drawable, 0.0, 0.9, 0.0 );
-
     	// TODO: Objective 1: Draw the control points of the selected patch (so that you can draw all of them)
-
     	
+    	for(int i = 0; i < 4; i++) {
+    		for(int j = 0; j < 4; j++) {
+    			pipeline.push();
+    			pipeline.translate(drawable, coordinatePatch[patch][0].getElement(i, j), coordinatePatch[patch][1].getElement(i, j), coordinatePatch[patch][2].getElement(i, j));
+    	    	pipeline.scale(drawable, 0.05, 0.05, 0.05);
+    	    	Sphere.draw(drawable, pipeline);
+    	    	pipeline.pop(drawable);
+    		}
+    	}
     }
     
     FloatBuffer vertexBuffer;
@@ -125,6 +133,7 @@ public class BezierPatchWork {
         vertexBuffer.rewind();
         normalBuffer.rewind();
 		int N = subdivisions.getValue();
+		//System.out.println(subdivisions.getValue());
 		int vertDataCount = 3*N*N;
 		for ( int i = 0; i < N; i++ ) {
 			for ( int j = 0; j < N; j++ ) {
@@ -274,9 +283,26 @@ public class BezierPatchWork {
 	 */
 	private Vector3d evaluateCoordinate( double s, double t, int patch ) {
 		// TODO: Objective 2: Evaluate the surface positions (as opposed to the zero vector)
-		
-		
-		return new Vector3d();
+		Vector3d vec = new Vector3d(0, 0, 0);
+		int n = 3;
+		for (int i = 0; i <= n; i++) {
+		    for (int j = 0; j <= n; j++) {
+		    	double poly_i = bernstein_polynomial(i, n, s);
+		    	double poly_j = bernstein_polynomial(j, n, t);
+		    	vec.x += poly_i * poly_j * coordinatePatch[patch][0].getElement(i, j);
+		    	vec.y += poly_i * poly_j * coordinatePatch[patch][1].getElement(i, j);
+		    	vec.z += poly_i * poly_j * coordinatePatch[patch][2].getElement(i, j);
+		    }
+		  }
+		return vec;
+	}
+	double bernstein_polynomial(int i, int n, double u) {
+		return (double)(choose(n, i) * Math.pow(u, i) * Math.pow(1-u, n-i));
+	}
+	
+	int choose(int n, int k) {
+		if (k == 0) return 1;
+		return ((n * choose(n - 1, k - 1)) / k);
 	}
 	
 	/**
@@ -284,16 +310,39 @@ public class BezierPatchWork {
 	 */
 	private Vector3d differentiateS(double s,double t,int patch) {
 		// TODO: Objective 3: Evaluate the surface derivative in the s direction
-		
-		return new Vector3d();
+		Vector3d vec = new Vector3d(0, 0, 0);
+		int n = 3;
+		for (int i = 0; i <= n-1; i++) {
+		    for (int j = 0; j <= n; j++) {
+		    	double poly_i = bernstein_polynomial(i, n-1, s);
+		    	double poly_j = bernstein_polynomial(j, n, t);
+		    	//double poly_j = 1;
+		    	vec.x += poly_i * poly_j * n*(coordinatePatch[patch][0].getElement(i+1, j) - coordinatePatch[patch][0].getElement(i, j));
+		    	vec.y += poly_i * poly_j * n*(coordinatePatch[patch][1].getElement(i+1, j) - coordinatePatch[patch][1].getElement(i, j));
+		    	vec.z += poly_i * poly_j * n*(coordinatePatch[patch][2].getElement(i+1, j) - coordinatePatch[patch][2].getElement(i, j));
+		    }
+		  }
+		return vec;
 	}
 	/**
 	 *  differentiates the Bezier mesh along the parametric 't' direction
 	 */
 	private Vector3d differentiateT(double s,double t,int patch) {
 		// TODO: Objective 3: Evaluate the surface derivative in the t direction
-
-		return new Vector3d();
+		Vector3d vec = new Vector3d(0, 0, 0);
+		int n = 3;
+		for (int i = 0; i <= n; i++) {
+		    for (int j = 0; j <= n-1; j++) {
+		    	double poly_i = bernstein_polynomial(i, n, s);
+		    	//double poly_i = 1;
+		    	double poly_j = bernstein_polynomial(j, n-1, t);
+		    	vec.x += poly_i * poly_j * n*(coordinatePatch[patch][0].getElement(i, j+1) - coordinatePatch[patch][0].getElement(i, j));
+		    	vec.y += poly_i * poly_j * n*(coordinatePatch[patch][1].getElement(i, j+1) - coordinatePatch[patch][1].getElement(i, j));
+		    	vec.z += poly_i * poly_j * n*(coordinatePatch[patch][2].getElement(i, j+1) - coordinatePatch[patch][2].getElement(i, j));
+		    }
+		  }
+		  
+		return vec;
 	}
 	
 	
