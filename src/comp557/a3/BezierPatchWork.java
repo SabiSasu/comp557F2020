@@ -349,12 +349,21 @@ public class BezierPatchWork {
 	 */
 	private Vector3d evalNormal(double s, double t, int patch) {
 		// TODO: Objective 4,5: compute the normal, and make sure the normal is always well defined!
-
 		Vector3d ds = differentiateS(s, t, patch);
+		if(t == 0) {
+			ds = differentiateS(s, 0.1, patch);
+		}
+		
+		
 		Vector3d dt = differentiateT(s, t, patch);
+		if(s == 0) {
+			dt = differentiateT(0.1, t, patch);
+		}
+		
         Vector3d result = new Vector3d(0, 0, 0);
         result.cross(ds, dt);
         result.normalize();
+        //System.out.println(result);
         //fix if the result vector is nan
         if(Double.isNaN(result.x) || Double.isNaN(result.y) || Double.isNaN(result.z)) {
         	result = new Vector3d(0, 1, 0);

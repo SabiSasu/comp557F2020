@@ -48,6 +48,8 @@ public class A3App implements SceneGraphNode {
 		patchwork = new BezierPatchWork("data/a3data/bezier.txt");
 		//patchwork = new BezierPatchWork("data/a3data/testPatches.txt");
 		// patchwork = new BezierPatchWork("data/a3data/testPatch.txt");
+		//patchwork = new BezierPatchWork("data/a3data/circlePatch.txt");
+		//patchwork = new BezierPatchWork("data/a3data/testCusp.txt");
 		numPatches = patchwork.getNumPatches();
 		patchNumber = new IntParameter("Patch Number", 0, 0, numPatches - 1);
 	}
