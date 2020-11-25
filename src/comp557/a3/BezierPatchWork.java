@@ -353,13 +353,10 @@ public class BezierPatchWork {
 		if(t == 0) {
 			ds = differentiateS(s, 0.1, patch);
 		}
-		
-		
 		Vector3d dt = differentiateT(s, t, patch);
 		if(s == 0) {
 			dt = differentiateT(0.1, t, patch);
 		}
-		
         Vector3d result = new Vector3d(0, 0, 0);
         result.cross(ds, dt);
         result.normalize();
