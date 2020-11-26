@@ -29,40 +29,26 @@ public class Plane extends Intersectable {
     public void intersect( Ray ray, IntersectResult result ) {
     
         // TODO: Objective 4: intersection of ray with plane
+    	
     	double denominator = n.dot(ray.viewDirection);
+    	Vector3d vector = new Vector3d(0,0,0);
+        vector.sub(ray.eyePoint);
+    	double numerator = n.dot(vector);
     	if(denominator != 0) {
-            Vector3d vector = new Vector3d(0,0,0);
-            vector.sub(ray.eyePoint);
-            double t = (n.dot(vector)/denominator);
+            double t = numerator/denominator;
             
-
             if (t > 0 && t < result.t) { 
+                Point3d point = new Point3d(
+                		ray.eyePoint.x + t*ray.viewDirection.x,
+                		ray.eyePoint.y + t*ray.viewDirection.y,
+                		ray.eyePoint.z + t*ray.viewDirection.z);
                 result.t = t;
-                
-                double pointX = ray.eyePoint.x + t*ray.viewDirection.x;
-                double pointY = ray.eyePoint.y + t*ray.viewDirection.y;
-                double pointZ = ray.eyePoint.z + t*ray.viewDirection.z;
-                
-                Point3d point = new Point3d(pointX,pointY,pointZ);
                 result.p.set(point);
-
                 result.n.set(n);
-
-                if(material2 != null) {
-                    int x = (int) Math.floor(point.x);
-                    x = Math.abs(x);
-                    int z = (int) Math.floor(point.z);
-                    z = Math.abs(z);
-
-                    if((x+z)%2 == 0)
-                        result.material = this.material;
-                    else
-                        result.material = this.material2;
-                }
-                else
-                    result.material = this.material;
+                double x = Math.abs(Math.floor(point.x));
+                double z = Math.abs(Math.floor(point.z));
+                result.material = (material2 != null && (x+z) % 2 == 0) ? this.material : this.material2;
             }
-            
             
     	}
 	}

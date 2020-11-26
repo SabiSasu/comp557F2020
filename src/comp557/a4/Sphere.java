@@ -40,34 +40,22 @@ public class Sphere extends Intersectable {
     
         // TODO: Objective 2: intersection of ray with sphere
     	
-    	Vector3d originSubCenter = new Vector3d();
-    	originSubCenter.sub(ray.eyePoint, this.center);
+    	Vector3d L = new Vector3d();
+    	L.sub(ray.eyePoint, this.center);
     	
-    	double underTheSquareRoot1 = Math.pow((2*(ray.viewDirection.dot(originSubCenter))), 2);
-    	double underTheSquareRoot2 = (-4*ray.viewDirection.lengthSquared())*(originSubCenter.lengthSquared()-Math.pow(this.radius,2));
-    	double underTheSquareRootTotal = underTheSquareRoot1 + underTheSquareRoot2;
+    	double a = ray.viewDirection.dot(ray.viewDirection); 
+    	double b = 2 * ray.viewDirection.dot(L); 
+    	double c = (L.dot(L)) - (this.radius*this.radius); 
+    	double discr = (b*b) - (4*a*c); 
+    	double quadratic = (-b - Math.sqrt(discr))/(2*a);
     	
-    	double numerator = (-2*(ray.viewDirection.dot(originSubCenter))) - Math.sqrt(underTheSquareRootTotal);
-    	
-    	double denominator = 2*(ray.viewDirection.lengthSquared());
-    	
-    	double d = (numerator/denominator);
-    	
-    	if(underTheSquareRootTotal >= 0 ) { 
-	    	if(d < result.t) {
-	    		result.t =d;
-	    		
-	    		/* The material of the intersection */
-	    		result.material = this.material;
-	    		
-	    		/** Intersection position */
-	    		ray.getPoint(result.t, result.p);
-	    		
-	    		
-	    		result.n.sub(result.p, this.center);
-	    		
-	    		result.n.normalize();
-	    	}
+    	if(discr >= 0 && quadratic < result.t) { 
+    		result.material = this.material;
+    		result.t = quadratic;
+    		ray.getPoint(result.t, result.p);
+    		
+    		result.n.sub(result.p, this.center);
+    		result.n.normalize();
     	}
     }
 }

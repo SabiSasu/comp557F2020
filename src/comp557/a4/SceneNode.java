@@ -65,24 +65,17 @@ public class SceneNode extends Intersectable {
 
         	// TODO: do something useful here!
         	
-        	/*Minv.transpose();
-        	Minv.transform(tmpResult.n);
-        	Minv.transpose();
-        	M.transform(tmpResult.p);
+        	result.material = this.material;
+        	if(tmpResult.material != null)
+        		result.material = tmpResult.material;
         	result.n.set(tmpResult.n);
         	result.p.set(tmpResult.p); 
         	result.t = tmpResult.t;
-        	result.material = (this.material == null) ? tmpResult.material : this.material;
-        	*/
-        	result.t = tmpResult.t;
         	
-        	M.transform(tmpResult.p);
-        	result.p.set(tmpResult.p);
-        	result.n.set(tmpResult.n);
-        	result.material = (this.material == null) ? tmpResult.material : this.material;
-        	result.n.normalize();
-        	M.transform(tmpRay.eyePoint);
-        	M.transform(tmpRay.viewDirection);
+        	M.transform(result.p);
+        	Minv.transpose();
+        	Minv.transform(result.n);
+        	Minv.transpose();
         }
     }
     
