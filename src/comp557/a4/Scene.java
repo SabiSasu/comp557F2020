@@ -45,78 +45,79 @@ public class Scene {
         int h = cam.imageSize.height;
         
         render.init(w, h, showPanel);
-
+         
+        double samples = render.samples;
+        
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
-                // TODO: Objective 1: generate a ray (use the generateRay method)
-            	Ray ray = new Ray();
-            	double[] offset = {0.5, 0.5}; 
-				generateRay(i, j, offset, cam, ray);
-				Color3f shading = new Color3f(0f, 0f, 0f);
-                
-				
-				IntersectResult intersectResult = new IntersectResult();  
-				for (Intersectable surface : surfaceList) {
-					// TODO: Objective 2: test for intersection with scene surfaces
-                    surface.intersect(ray, intersectResult);
-				}
-                    Ray shadowRay = new Ray();
-					IntersectResult shadowResult = new IntersectResult();
+            	Color3f c = new Color3f(0f, 0f, 0f);
+            	for (double y = 0; y < Math.sqrt(samples); y++) {
+                    for (double x = 0; x < Math.sqrt(samples); x++) {
+            	
+		                // TODO: Objective 1: generate a ray (use the generateRay method)
+		            	Ray ray = new Ray();
+		            	double[] offset = {(y + 0.5) / Math.sqrt(samples), (x + 0.5) / Math.sqrt(samples)};
+						generateRay(i, j, offset, cam, ray);
+						
+		                
+						// TODO: Objective 2: test for intersection with scene surfaces
+						IntersectResult intersectResult = new IntersectResult();  
+						for (Intersectable surface : surfaceList)
+		                    surface.intersect(ray, intersectResult);
 					
-                    // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
-                    
-    				if(intersectResult.t != Double.POSITIVE_INFINITY) {	
-    					//TODO: modify
-    					//Ambient Shading
-    					shading.x += ambient.x * intersectResult.material.diffuse.x;
-    					shading.y += ambient.y * intersectResult.material.diffuse.y;
-    					shading.z += ambient.z * intersectResult.material.diffuse.z;
-    					intersectResult.n.normalize();
-    					 
-    					for(Light light: lights.values()){
-
-    						
-    						if(!SceneNode.nodeMap.containsKey("root") || !inShadow(intersectResult, light, SceneNode.nodeMap.get("root"), shadowResult, shadowRay)){
-    							Vector3d l = new Vector3d();
-                                l.sub(light.from, intersectResult.p);
-                                l.normalize();
-
-                                Vector3d v = new Vector3d();
-                                v.sub(cam.from, intersectResult.p);
-                                v.normalize();
-
-                                Vector3d hlight = new Vector3d();
-                                hlight.add(l, v);
-                                hlight.normalize();
-
-                                float ndotl = (float) intersectResult.n.dot(l);
-                                float ndoth = (float) intersectResult.n.dot(hlight);
-
-                                float max1 = (0 > ndotl) ? 0 : ndotl;
-                                float max2 = (0 > ndoth) ? 0 : ndoth;
-                                max2 = (float) Math.pow(max2, intersectResult.material.shinyness);
-
-                                float Ix = (float) (light.color.x * light.power);
-                                float Iy = (float) (light.color.y * light.power);
-                                float Iz = (float) (light.color.z * light.power);
-
-                                shading.x += intersectResult.material.diffuse.x * Ix * max1 + intersectResult.material.specular.x * Ix * max2;
-                                shading.y += intersectResult.material.diffuse.y * Iy * max1 + intersectResult.material.specular.y * Iy * max2;
-                                shading.z += intersectResult.material.diffuse.z * Iz * max1 + intersectResult.material.specular.z * Iz * max2;}
-    					}
-    				}
-    				else
-    					shading.add(render.bgcolor);
-				//}
-                    
-                
+		                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
+						Ray shadowRay = new Ray();
+						IntersectResult shadowResult = new IntersectResult();
+						
+						
+						if(intersectResult.t != Double.POSITIVE_INFINITY) {	
+							c = new Color3f(
+									ambient.x * intersectResult.material.diffuse.x,
+									ambient.y * intersectResult.material.diffuse.y,
+									ambient.z * intersectResult.material.diffuse.z);
+							intersectResult.n.normalize();
+							 
+							for(Light light: lights.values()){
+								if(!SceneNode.nodeMap.containsKey("root") || !inShadow(intersectResult, light, SceneNode.nodeMap.get("root"), shadowResult, shadowRay)){
+									Vector3d l = new Vector3d();
+		                            l.sub(light.from, intersectResult.p);
+		                            l.normalize();
+		
+		                            Vector3d v = new Vector3d();
+		                            v.sub(cam.from, intersectResult.p);
+		                            v.normalize();
+		
+		                            Vector3d hlight = new Vector3d();
+		                            hlight.add(l, v);
+		                            hlight.normalize();
+		
+		                            float ndotl = (float) intersectResult.n.dot(l);
+		                            float ndoth = (float) intersectResult.n.dot(hlight);
+		
+		                            float max1 = (0 > ndotl) ? 0 : ndotl;
+		                            float max2 = (0 > ndoth) ? 0 : ndoth;
+		                            max2 = (float) Math.pow(max2, intersectResult.material.shinyness);
+		
+		                            float Ix = (float) (light.color.x * light.power);
+		                            float Iy = (float) (light.color.y * light.power);
+		                            float Iz = (float) (light.color.z * light.power);
+		
+		                            c.x += intersectResult.material.diffuse.x * Ix * max1 + intersectResult.material.specular.x * Ix * max2;
+		                            c.y += intersectResult.material.diffuse.y * Iy * max1 + intersectResult.material.specular.y * Iy * max2;
+		                            c.z += intersectResult.material.diffuse.z * Iz * max1 + intersectResult.material.specular.z * Iz * max2;}
+							}
+						}
+						else
+							c.add(render.bgcolor);
+                    }       
+                    }
             	// Here is an example of how to calculate the pixel value.
-				//shading.scale(1 / ((float) Math.pow(n, 2)));
-				//shading.clamp(0, 1);
-				int r = (int)(255*shading.x > 255? 255: 255*shading.x);
-                int g = (int)(255*shading.y > 255? 255: 255*shading.y);
-                int b = (int)(255*shading.z > 255? 255: 255*shading.z);
+				c.scale((float) (1 / samples));
+				c.clamp(0, 1);
+				int r = (int)(255*c.x > 255? 255: 255*c.x);
+                int g = (int)(255*c.y > 255? 255: 255*c.y);
+                int b = (int)(255*c.z > 255? 255: 255*c.z);
                 int a = 255;
                 int argb = (a<<24 | r<<16 | g<<8 | b);    
                 
@@ -193,22 +194,20 @@ public class Scene {
 		
 		// TODO: Objective 5: check for shdows and use it in your lighting computation
 
-		Vector3d d = new Vector3d(light.from);
-        d.sub(result.p);
-        d.normalize();
-
-        Point3d point = new Point3d(d);
-        point.scaleAdd(1e-9, result.p);
-
-        shadowRay.set(point, d);
-        for (Intersectable s : ((SceneNode)surface).children) {
-            s.intersect(shadowRay, shadowResult);
-            //check if blocked object is before light source
-            if( shadowResult.t > 0 && shadowResult.t != Double.POSITIVE_INFINITY) { 
-                double lenValue = Math.sqrt(Math.pow(light.from.x - point.x, 2) + Math.pow(light.from.y - point.y, 2) + Math.pow(light.from.z - point.z, 2));
-                double lenValue2 = Math.sqrt(Math.pow(shadowResult.p.x - point.x, 2) + Math.pow(shadowResult.p.y - point.y, 2) + Math.pow(shadowResult.p.z - point.z, 2));
-
-                if(lenValue2 < lenValue)
+		Vector3d t = new Vector3d(light.from);
+        t.sub(result.p);
+        t.normalize();
+        Point3d p = new Point3d(t);
+        p.scale(1e-9);
+        p.add(result.p);
+        shadowRay.set(p, t);
+        
+        for (Intersectable childNode : ((SceneNode)surface).children) {
+        	childNode.intersect(shadowRay, shadowResult);
+            if(shadowResult.t != Double.POSITIVE_INFINITY && shadowResult.t > 0) { 
+            	double lightDistance = light.from.distance(p);
+            	double shadowDistance = shadowResult.p.distance(p);
+                if(shadowDistance < lightDistance)
                     return true;
             }
         }
