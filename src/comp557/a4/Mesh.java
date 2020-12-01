@@ -28,66 +28,56 @@ public class Mesh extends Intersectable {
 	public void intersect(Ray ray, IntersectResult result) {
 		
 		// TODO: Objective 7: ray triangle intersection for meshes
-		Vector3d edge = new Vector3d();
-		Vector3d edge2 = new Vector3d();
-		Vector3d pVec = new Vector3d();
-		Vector3d tVec = new Vector3d();
-		Vector3d qVec = new Vector3d();
-		Point3d eyepoint = ray.eyePoint;
-		Vector3d viewDir = ray.viewDirection;
-		float t = -1;
 
-		for(int[] face : soup.faceList) { 
-			Point3d p0 = soup.vertexList.get(face[0]).p;
-			Point3d p1 = soup.vertexList.get(face[1]).p;
-			Point3d p2 = soup.vertexList.get(face[2]).p;
+		for(int i = 0; i < soup.faceList.size(); i++) {
+			
+			int[] face = soup.faceList.get(i);
+			Point3d v0 = soup.vertexList.get(face[0]).p;
+			Point3d v1 = soup.vertexList.get(face[1]).p;
+			Point3d v2 = soup.vertexList.get(face[2]).p;
 
-			edge.sub(p1, p0);
-			edge2.sub(p2, p0);
+			Vector3d edge1 = new Vector3d();
+			edge1.sub(v1, v0);
+			Vector3d edge2 = new Vector3d();
+			edge2.sub(v2, v0);
+			
+			Vector3d pvec = new Vector3d();
+			pvec.cross(ray.viewDirection, edge2);
 
-			pVec.cross(viewDir, edge2);
+			double t = 0;
+			double det = 1.0/edge1.dot(pvec);
 
-			float det = (float) edge.dot(pVec);
-
-			if (det < 1e-9) { 
-				//reverse of mesh
-				edge.sub(p2, p0);
-				edge2.sub(p1, p0);
+			if (det < 0) {
+				edge1.sub(v2, v0);
+				edge2.sub(v1, v0);
 			}
-
-			if (det > 1e-9) { 
-				float invDet = 1.0f/det;
-
-				tVec.sub(eyepoint, p0);
-
-				float u = (float)tVec.dot(pVec) * invDet;
-
+			else {
+				Vector3d tvec = new Vector3d();
+				tvec.sub(ray.eyePoint, v0);
+				double u = tvec.dot(pvec) * det;
+	
 				if (u > 0 && u < 1) {
-					qVec.cross(tVec, edge);
-
-					float v = (float) viewDir.dot(qVec) * invDet;
-
-					if (v > 0 && (u+v) < 1)
-						t = (float) edge2.dot(qVec) * invDet;
+					Vector3d qvec = new Vector3d();
+					qvec.cross(tvec, edge1);
+					double v = ray.viewDirection.dot(qvec) * det;
+					if (v > 0 && (u + v) < 1)
+						t = edge2.dot(qvec) * det;
 				}
 			}
 
-			if (t > 1e-9 && t < result.t) { 
-				//check which intersection is closer
-				result.t = t;
-
-				double pointX = eyepoint.x + t*viewDir.x;
-				double pointY = eyepoint.y + t*viewDir.y;
-				double pointZ = eyepoint.z + t*viewDir.z;
-				
-				Point3d p = new Point3d(pointX,pointY,pointZ);
-				result.p.set(p);
-
-				Vector3d n = new Vector3d();
-				n.cross(edge,edge2);
-				result.n.set(n);
-
+			if (t > 0 && t < result.t) { 
 				result.material = this.material;
+				Vector3d normal = new Vector3d();
+				normal.cross(edge1,edge2);
+				result.n.set(normal);
+				
+				Point3d point = new Point3d(ray.viewDirection);
+				point.scale(t);
+				point.add(ray.eyePoint);
+				result.p.set(point);
+				
+				result.t = t;
+				
 			}
 		}
 	}

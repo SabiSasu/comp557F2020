@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Color4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3d;
@@ -47,20 +48,28 @@ public class Scene {
         render.init(w, h, showPanel);
          
         double samples = render.samples;
+      
+        double[] offset =  {0.5, 0.5};
+        
+        if(!render.jitter)
+        	samples = 1;
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
             	Color3f c = new Color3f(0f, 0f, 0f);
-            	for (double y = 0; y < Math.sqrt(samples); y++) {
-                    for (double x = 0; x < Math.sqrt(samples); x++) {
-            	
+            	for (double y = 0; y < samples; y++) {
+                    for (double x = 0; x < samples; x++) {
+                    	
 		                // TODO: Objective 1: generate a ray (use the generateRay method)
 		            	Ray ray = new Ray();
-		            	double[] offset = {(y + 0.5) / Math.sqrt(samples), (x + 0.5) / Math.sqrt(samples)};
+		            	
+		            	if(render.jitter) {
+		            		offset[0] = (y + 0.5) / samples;
+		            		offset[1] = (x + 0.5) / samples;
+		            	}
 						generateRay(i, j, offset, cam, ray);
 						
-		                
 						// TODO: Objective 2: test for intersection with scene surfaces
 						IntersectResult intersectResult = new IntersectResult();  
 						for (Intersectable surface : surfaceList)
@@ -72,49 +81,60 @@ public class Scene {
 						
 						
 						if(intersectResult.t != Double.POSITIVE_INFINITY) {	
-							c = new Color3f(
+							Color3f ambientLight = new Color3f(
 									ambient.x * intersectResult.material.diffuse.x,
 									ambient.y * intersectResult.material.diffuse.y,
 									ambient.z * intersectResult.material.diffuse.z);
+							c.add(ambientLight);
 							intersectResult.n.normalize();
 							 
 							for(Light light: lights.values()){
 								if(!SceneNode.nodeMap.containsKey("root") || !inShadow(intersectResult, light, SceneNode.nodeMap.get("root"), shadowResult, shadowRay)){
-									Vector3d l = new Vector3d();
-		                            l.sub(light.from, intersectResult.p);
-		                            l.normalize();
+									Vector3d cameraDirection = new Vector3d();
+									cameraDirection.sub(cam.from, intersectResult.p);
+									cameraDirection.normalize();
+									
+									Vector3d lightDirection = new Vector3d();
+									lightDirection.sub(light.from, intersectResult.p);
+									lightDirection.normalize();
 		
-		                            Vector3d v = new Vector3d();
-		                            v.sub(cam.from, intersectResult.p);
-		                            v.normalize();
+		                            Vector3d halfVector = new Vector3d();
+		                            halfVector.add(lightDirection, cameraDirection);
+		                            halfVector.normalize();
 		
-		                            Vector3d hlight = new Vector3d();
-		                            hlight.add(l, v);
-		                            hlight.normalize();
+		                            double diffuse = Math.max(0, intersectResult.n.dot(lightDirection));
+		                            double specular = Math.max(0, intersectResult.n.dot(halfVector));
+		                            if (diffuse == 0) 
+		                            	specular = 0;
+		                            else
+		                            	specular = Math.pow(specular, intersectResult.material.shinyness);
 		
-		                            float ndotl = (float) intersectResult.n.dot(l);
-		                            float ndoth = (float) intersectResult.n.dot(hlight);
-		
-		                            float max1 = (0 > ndotl) ? 0 : ndotl;
-		                            float max2 = (0 > ndoth) ? 0 : ndoth;
-		                            max2 = (float) Math.pow(max2, intersectResult.material.shinyness);
-		
-		                            float Ix = (float) (light.color.x * light.power);
-		                            float Iy = (float) (light.color.y * light.power);
-		                            float Iz = (float) (light.color.z * light.power);
-		
-		                            c.x += intersectResult.material.diffuse.x * Ix * max1 + intersectResult.material.specular.x * Ix * max2;
-		                            c.y += intersectResult.material.diffuse.y * Iy * max1 + intersectResult.material.specular.y * Iy * max2;
-		                            c.z += intersectResult.material.diffuse.z * Iz * max1 + intersectResult.material.specular.z * Iz * max2;}
+		                            Color3f lightColor = new Color3f(light.color.x, light.color.y, light.color.z);
+		                            lightColor.scale((float) light.power);
+		                            
+		                            Color3f scatteredLight = new Color3f(intersectResult.material.diffuse.x * lightColor.x, 
+		                            		intersectResult.material.diffuse.y* lightColor.y, 
+		                            		intersectResult.material.diffuse.z* lightColor.z);
+		                            scatteredLight.scale((float) diffuse);
+		                            
+		                            Color3f reflectedLight = new Color3f(intersectResult.material.specular.x * lightColor.x, 
+		                            		intersectResult.material.specular.y* lightColor.y, 
+		                            		intersectResult.material.specular.z* lightColor.z);
+		                            reflectedLight.scale((float) specular);
+		                            
+		                            c.add(scatteredLight);
+		                            c.add(reflectedLight);
+		                        }
 							}
 						}
 						else
 							c.add(render.bgcolor);
                     }       
-                    }
-            	// Here is an example of how to calculate the pixel value.
-				c.scale((float) (1 / samples));
-				c.clamp(0, 1);
+                }
+
+            	if(render.jitter) 
+            		c.scale((float) (1.0f /  Math.pow(samples, 2)));
+
 				int r = (int)(255*c.x > 255? 255: 255*c.x);
                 int g = (int)(255*c.y > 255? 255: 255*c.y);
                 int b = (int)(255*c.z > 255? 255: 255*c.z);
